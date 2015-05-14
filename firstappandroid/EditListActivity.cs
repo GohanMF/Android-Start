@@ -42,15 +42,15 @@ namespace firstappandroid
             idList = Intent.Extras.GetInt("idList");
             SQLiteConnection db = DBConnection.StartConnection();
  
-            TableQuery<db_items> Items;
+             
             /*  get values from lista and items from the list */
 
             if (db != null) {
                 db_Listas lista = db.Get<db_Listas>(idList);
                 
-                 Items = from l in db.Table<db_items>()
+              var  Items = (from l in db.Table<db_items>()
                             where l.Lista_id == idList
-                            select l;
+                            select l);
 
 
 

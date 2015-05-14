@@ -10,6 +10,8 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 
+using firstappandroid.Class;
+
 namespace firstappandroid
 {
     [Activity(Label = "LoginActivity" , MainLauncher = true)]
@@ -19,13 +21,15 @@ namespace firstappandroid
         {
             base.OnCreate(bundle);
 
+            
+
             SetContentView(Resource.Layout.Login);
 
             Button ButtonLogin = FindViewById<Button>(Resource.Id.Login);
             EditText LoginName = FindViewById<EditText>(Resource.Id.LoginName);
             EditText LoginPass = FindViewById<EditText>(Resource.Id.LoginPass);
 
-
+            dropdatabase();
 
             ButtonLogin.Click += (sender ,e) => 
             {

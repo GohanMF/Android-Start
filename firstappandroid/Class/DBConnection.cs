@@ -14,6 +14,8 @@ using SQLite;
 
 using System.IO;
 
+using firstappandroid.Class.DB;
+
 namespace firstappandroid.Class
 {
     class DBConnection
@@ -26,21 +28,38 @@ namespace firstappandroid.Class
             System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "listasdemo.db3"
             );
 
-            var db = new SQLiteConnection(dbpath);
+            SQLiteConnection db = new SQLiteConnection(dbpath);
 
 
             /*criaçao das tabelas necessarias*/
 
-
-            db.CreateTable<DB.db_Listas>();
-            db.CreateTable<DB.db_items>();
+    
 
 
-            return new SQLiteConnection(dbpath);
+            db.CreateTable<db_Listas>();
+            db.CreateTable<db_items>();
+
+
+            return db;
 
         }
 
+        public static bool dropdatabase() {
 
+            string dbpath = Path.Combine(
+               System.Environment.GetFolderPath(System.Environment.SpecialFolder.Personal), "listasdemo.db3"
+               );
+
+            var db = new SQLiteConnection(dbpath);
+
+            db.DeleteAll<db_Listas>();
+            db.DeleteAll<db_items>();
+
+            db.Commit();
+
+            return true;
+
+        }
 
     }
 }

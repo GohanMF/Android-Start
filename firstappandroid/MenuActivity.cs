@@ -20,10 +20,10 @@ namespace firstappandroid
     [Activity(Label = "MenuActivity")]
     public class MenuActivity : Activity
     {
-      static List<string> List_grocerys;
+    static List<string> List_grocerys;
         
     static SQLiteConnection db = DBConnection.StartConnection();
-        
+    static SQLite.TableQuery<db_Listas> lista;
 
         protected override void OnCreate(Bundle bundle)
         {
@@ -87,11 +87,13 @@ namespace firstappandroid
                 base.OnCreateView(inflater, container, savedInstanceState);
 
                 var view = inflater.Inflate(Resource.Layout.MyList, container, false);
+                 lista = db.Table<db_Listas>();
+              
 
                 List_grocerys = new List<string>();
-                var lista = db.Table<db_Listas>();
+                
                 foreach (var i in lista)
-                    List_grocerys.Add(i.Name);
+                List_grocerys.Add(i.Name);
 
                 var mylist = view.FindViewById<ListView>(Resource.Id.listView1);
                 mylist.Adapter = new ArrayAdapter<string>(view.Context, Android.Resource.Layout.SimpleListItem1, List_grocerys);
@@ -99,22 +101,27 @@ namespace firstappandroid
                // this.ListAdapter = new ArrayAdapter<string>( Resource.Layout.List, List_grocerys);
 
 
-                mylist.ItemClick += (sender, e) =>
+                mylist.ItemClick += (object sender , Android.Widget.AdapterView.ItemClickEventArgs e) =>
                 {
+
+                    Android.Widget.TextView item = (Android.Widget.TextView)e.View;
+
+                    var something = (from l in lista
+                                    where l.Name ==  item.Text
+                                    select l).First();
+
+                   // Android.Widget.Toast.MakeText(view.Context, something.Id.ToString(), Android.Widget.ToastLength.Short).Show();
                     var intent = new Intent(view.Context, typeof(EditListActivity));
-                    intent.PutExtra("idList", 1);
-                    StartActivity(intent);
+                    intent.PutExtra("idList", something.Id);
+                    StartActivity(intent); 
                 };
+                
+              
 
+            return view;
 
-                return view;
             }
-
-
-
-
-
-
+           
         }
 
         class SampleTabFragment2 : Fragment
@@ -168,7 +175,7 @@ namespace firstappandroid
                             foreach (var i in allItems)
                             {
                                 var newitem = new db_items();
-                                newitem.Name = itemText.Text;
+                                newitem.Name = i;
                                 newitem.Lista_id = id;
                                 db.Insert(newitem);
                             }
