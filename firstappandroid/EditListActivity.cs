@@ -13,6 +13,7 @@ using Android.Widget;
 using SQLite;
 using firstappandroid.Class;
 using firstappandroid.Class.DB;
+using firstappandroid.Adapters;
 
 namespace firstappandroid
 {
@@ -33,8 +34,9 @@ namespace firstappandroid
             EditText grocText = FindViewById<EditText>(Resource.Id.grocText);
             EditText itemText = FindViewById<EditText>(Resource.Id.itemText);
             ListView listitems = FindViewById<ListView>(Resource.Id.listItems);
+            //ListView mylist = FindViewById<ListView>(Resource.Id.listItems);
 
-
+            List<db_items> itemsForList = new List<db_items>();
             
             /*  load  objects passed from previous view    */
 
@@ -54,12 +56,15 @@ namespace firstappandroid
 
 
 
+              
+              foreach (var i in Items)
+                  itemsForList.Add(i);
+                       //allItems.Add(i.Name);
 
-                foreach (var i in Items)
-                       allItems.Add(i.Name);
+               
+                
 
-                var mylist = FindViewById<ListView>(Resource.Id.listItems);
-                mylist.Adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleListItem1, allItems);
+                listitems.Adapter = new CustomViewAdapter(this, itemsForList);
 
 
                 grocText.Text = lista.Name;
@@ -130,6 +135,23 @@ namespace firstappandroid
                 StartActivity(intent);
             }; 
 
+
+            listitems.ItemClick += (object sender, AdapterView.ItemClickEventArgs e) =>
+            {
+
+                var listView = sender as ListView;
+                var t = itemsForList[e.Position];
+              
+                Console.WriteLine(listView.IsItemChecked(e.Position));
+                Android.Widget.Toast.MakeText(this, t.Name + " " + t.bought, Android.Widget.ToastLength.Short).Show();
+
+                t.bought = !t.bought;
+
+
+                listView.SetItemChecked(e.Position, t.bought);
+                Console.WriteLine(listView.IsItemChecked(e.Position));
+                 
+            };
         }
     }
 }

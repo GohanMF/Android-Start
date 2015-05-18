@@ -5,7 +5,7 @@ using System.Text;
 
 using Android.App;
 using Android.Content;
-using Android.OS; 
+using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
@@ -20,19 +20,19 @@ namespace firstappandroid
     [Activity(Label = "MenuActivity")]
     public class MenuActivity : Activity
     {
-    static List<string> List_grocerys;
-        
-    static SQLiteConnection db = DBConnection.StartConnection();
-    static SQLite.TableQuery<db_Listas> lista;
+        static List<string> List_grocerys;
+
+        static SQLiteConnection db = DBConnection.StartConnection();
+        static SQLite.TableQuery<db_Listas> lista;
 
         protected override void OnCreate(Bundle bundle)
         {
             base.OnCreate(bundle);
 
             List_grocerys = new List<string>();
-            
 
-          
+
+
 
             // List_grocerys = new List<string> { "groc 1", "groc 2", "groc 3" };
 
@@ -78,50 +78,50 @@ namespace firstappandroid
             this.ActionBar.AddTab(tab);
         }
 
-        
+
 
         class SampleTabFragment : Fragment
         {
-            public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState )
+            public override View OnCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState)
             {
                 base.OnCreateView(inflater, container, savedInstanceState);
 
                 var view = inflater.Inflate(Resource.Layout.MyList, container, false);
-                 lista = db.Table<db_Listas>();
-              
+                lista = db.Table<db_Listas>();
+
 
                 List_grocerys = new List<string>();
-                
+
                 foreach (var i in lista)
-                List_grocerys.Add(i.Name);
+                    List_grocerys.Add(i.Name);
 
                 var mylist = view.FindViewById<ListView>(Resource.Id.listView1);
                 mylist.Adapter = new ArrayAdapter<string>(view.Context, Android.Resource.Layout.SimpleListItem1, List_grocerys);
 
-               // this.ListAdapter = new ArrayAdapter<string>( Resource.Layout.List, List_grocerys);
+                // this.ListAdapter = new ArrayAdapter<string>( Resource.Layout.List, List_grocerys);
 
 
-                mylist.ItemClick += (object sender , Android.Widget.AdapterView.ItemClickEventArgs e) =>
+                mylist.ItemClick += (object sender, Android.Widget.AdapterView.ItemClickEventArgs e) =>
                 {
 
                     Android.Widget.TextView item = (Android.Widget.TextView)e.View;
 
                     var something = (from l in lista
-                                    where l.Name ==  item.Text
-                                    select l).First();
+                                     where l.Name == item.Text
+                                     select l).First();
 
-                   // Android.Widget.Toast.MakeText(view.Context, something.Id.ToString(), Android.Widget.ToastLength.Short).Show();
+                    // Android.Widget.Toast.MakeText(view.Context, something.Id.ToString(), Android.Widget.ToastLength.Short).Show();
                     var intent = new Intent(view.Context, typeof(EditListActivity));
                     intent.PutExtra("idList", something.Id);
-                    StartActivity(intent); 
+                    StartActivity(intent);
                 };
-                
-              
 
-            return view;
+
+
+                return view;
 
             }
-           
+
         }
 
         class SampleTabFragment2 : Fragment
@@ -139,13 +139,15 @@ namespace firstappandroid
                 EditText grocText = view.FindViewById<EditText>(Resource.Id.grocText);
                 EditText itemText = view.FindViewById<EditText>(Resource.Id.itemText);
                 ListView listitems = view.FindViewById<ListView>(Resource.Id.listItems);
-                
-                
 
-                add.Click += (object sender , EventArgs e) => { 
-               
-                    if (!string.IsNullOrWhiteSpace(itemText.Text)){
-                        
+
+
+                add.Click += (object sender, EventArgs e) =>
+                {
+
+                    if (!string.IsNullOrWhiteSpace(itemText.Text))
+                    {
+
                         Console.WriteLine(listitems.Count);
                         allItems.Add(itemText.Text);
                         listitems.Adapter = new ArrayAdapter<string>(view.Context, Android.Resource.Layout.SimpleListItem1, allItems);
@@ -153,7 +155,7 @@ namespace firstappandroid
                         itemText.Text = "";
                         Console.WriteLine(listitems.Count);
                     }
-                    
+
 
                 };
 
@@ -163,24 +165,26 @@ namespace firstappandroid
                     {
 
                         Console.WriteLine(List_grocerys.Count);
-                       
+
                         Console.WriteLine(grocText.Text);
                         var newitemlist = new db_Listas();
                         newitemlist.Name = grocText.Text;
-                        var id = db.Insert(newitemlist);
 
-
-                        if (allItems.Count() != 0) {
-
-                            foreach (var i in allItems)
+                        if (db.Insert(newitemlist) > 0)
+                        {
+                            if (allItems.Count() != 0)
                             {
-                                var newitem = new db_items();
-                                newitem.Name = i;
-                                newitem.Lista_id = id;
-                                db.Insert(newitem);
+
+                                foreach (var i in allItems)
+                                {
+                                    var newitem = new db_items();
+                                    newitem.Name = i;
+                                    newitem.Lista_id = newitemlist.Id; 
+                                    newitem.bought = false; 
+                                    db.Insert(newitem);
+                                }
                             }
                         }
-
 
                         Console.WriteLine(List_grocerys.Count);
 

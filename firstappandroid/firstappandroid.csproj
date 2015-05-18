@@ -49,6 +49,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Adapters\CustomViewAdapter.cs" />
     <Compile Include="CallHistoryActivity.cs" />
     <Compile Include="Class\DBConnection.cs" />
     <Compile Include="Class\DB\db_items.cs" />
@@ -76,6 +77,9 @@
       <SubType>AndroidResource</SubType>
     </AndroidResource>
     <AndroidResource Include="Resources\layout\MyList.axml">
+      <SubType>AndroidResource</SubType>
+    </AndroidResource>
+    <AndroidResource Include="Resources\layout\customView.axml">
       <SubType>AndroidResource</SubType>
     </AndroidResource>
   </ItemGroup>

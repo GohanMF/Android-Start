@@ -33,10 +33,11 @@ namespace firstappandroid.Class
 
             /*criaçao das tabelas necessarias*/
 
-    
+          
 
 
-            db.CreateTable<db_Listas>();
+
+                db.CreateTable<db_Listas>();
             db.CreateTable<db_items>();
 
 
@@ -51,12 +52,13 @@ namespace firstappandroid.Class
                );
 
             var db = new SQLiteConnection(dbpath);
+            try {
 
-            db.DeleteAll<db_Listas>();
-            db.DeleteAll<db_items>();
+                db.DropTable<db_Listas>();
+                db.DropTable<db_items>();
 
-            db.Commit();
-
+            
+            }catch(Exception e){}
             return true;
 
         }

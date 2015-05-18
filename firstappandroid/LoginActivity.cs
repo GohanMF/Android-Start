@@ -29,7 +29,7 @@ namespace firstappandroid
             EditText LoginName = FindViewById<EditText>(Resource.Id.LoginName);
             EditText LoginPass = FindViewById<EditText>(Resource.Id.LoginPass);
 
-            dropdatabase();
+            DBConnection.dropdatabase();
 
             ButtonLogin.Click += (sender ,e) => 
             {
